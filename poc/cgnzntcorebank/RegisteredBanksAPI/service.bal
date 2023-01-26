@@ -8,7 +8,7 @@ service / on new http:Listener(9090) {
     # + return - json type containing the list of banks
     resource function get registered\-funding\-banks() returns json|error {
         // Send a response back to the caller.
-        json listOfBanks = {"array": ["ABC", "Bank GSA", "ERGO Bank", "MIS Bank", "LP Bank", "Co Bank"]};
+        json listOfBanks = {"ListofBanks": ["ABC", "Bank GSA", "ERGO Bank", "MIS Bank", "LP Bank", "Co Bank"]};
         return listOfBanks;
     }
 }
