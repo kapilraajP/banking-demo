@@ -4,14 +4,11 @@ import ballerina/http;
 # bound to port `9090`.
 service / on new http:Listener(9090) {
 
-    # A resource for generating greetings
-    # + name - the input string name
-    # + return - string name with hello message or error
-    resource function get greeting(string name) returns string|error {
+    # A resource to Retrieve registered funding banks in Cognizant
+    # + return - json type containing the list of banks
+    resource function get registered\-funding\-banks() returns json|error {
         // Send a response back to the caller.
-        if name is "" {
-            return error("name should not be empty!");
-        }
-        return "Hello, " + name;
+        json listOfBanks = {"array": ["ABC", "Bank GSA", "ERGO Bank", "MIS Bank", "LP Bank", "Co Bank"]};
+        return listOfBanks;
     }
 }
