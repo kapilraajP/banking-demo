@@ -78,9 +78,9 @@ service / on new http:Listener(9090) {
         return listOfBanks;
     }
 
-    resource function get accounts() returns json|error {
+    resource function get accounts() returns json[]|error {
         // Send a response back to the caller.
-        json listOfAccounts = <json[]>allAccounts.toJson();
+        json[] listOfAccounts = <json[]>allAccounts.toJson();
         return listOfAccounts;
     }
 }
