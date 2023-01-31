@@ -48,7 +48,8 @@ service / on new http:Listener(9090) {
     resource function post payments(@http:Payload json paymentDetails) returns json|error {
         // Send a response back to the caller.
         string typeofTransaction = check paymentDetails.typeofTransaction;
-        float amount = check paymentDetails.amount;
+        string amountTemp = check paymentDetails.amount;
+        float amount = check float:fromString(amountTemp);
         string sourceOfPayment = check paymentDetails.bankAccount;
         string currency = check paymentDetails.currency;
         string timeOfTransaction = check paymentDetails.timeOfTransaction;
