@@ -137,10 +137,18 @@ service / on new http:Listener(9090) {
                 "StatusUpdateDateTime": bookingDateTime,
                 "CreationDateTime": valueDateTime,
                 "Initiation": {
+                    "DebtorAccount": {
+                        "Identification": accountId
 
+                    },
+                    "CreditorAccount": {
+                        "Identification": issuer
+
+                    }
                 },
                 "Reference": transactionReference,
-                "CurrencyOfTransfer": currency
+                "CurrencyOfTransfer": currency,
+                "amount": amount
 
             },
             "Meta": {
