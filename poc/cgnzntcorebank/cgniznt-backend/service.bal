@@ -138,11 +138,11 @@ service / on new http:Listener(9090) {
                 "CreationDateTime": valueDateTime,
                 "Initiation": {
                     "DebtorAccount": {
-                        "Identification": accountId
+                        "scheme": accountId
 
                     },
                     "CreditorAccount": {
-                        "Identification": issuer
+                        "scheme": issuer
 
                     }
                 },
