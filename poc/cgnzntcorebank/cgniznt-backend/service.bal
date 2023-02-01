@@ -82,7 +82,7 @@ service / on new http:Listener(9090) {
         string creditDebitIndicator = check paymentDetails.Data.Initiation.CreditDebitIndicator;
         string amountTemp = check paymentDetails.Data.Initiation.InstructedAmount.Amount;
         string currency = check paymentDetails.Data.Initiation.CurrencyOfTransfer;
-        string issuer = "";
+        string issuer = "My account";
         string accountId = "";
         string bookingDateTime = time:utcToString(time:utcNow());
         string valueDateTime = time:utcToString(time:utcNow());
