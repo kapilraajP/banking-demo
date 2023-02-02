@@ -48,9 +48,6 @@ type AmountRec record {|
 # bound to port `9090`.
 service / on new http:Listener(9090) {
 
-    # A resource for generating greetings
-    # + name - the input string name
-    # + return - string name with hello message or error
     resource function post create\-account(@http:Payload json accountDetails) returns json|error {
         // Send a response back to the caller.
 
