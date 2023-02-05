@@ -164,7 +164,7 @@ service / on new http:Listener(9090) {
         else {
             issuer = check details.Data.Initiation.CreditorAccount.SchemeName;
             accountId = check details.Data.Initiation.DebtorAccount.Identification;
-            self.changeAccountBalance(amount, accountId, "Credit");
+            self.changeAccountBalance(amount, accountId, "Debit");
 
         }
         return [issuer, accountId];
