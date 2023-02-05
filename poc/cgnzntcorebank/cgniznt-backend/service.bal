@@ -1,6 +1,7 @@
 import ballerina/http;
 import ballerina/uuid;
 import ballerina/time;
+import ballerina/log;
 
 int transactionIndex = 0;
 
@@ -51,52 +52,69 @@ service / on new http:Listener(9090) {
     # A resource for creating a new account
     # + accountDetails - json containing the new account details
     # + return - newly created account information.
-    resource function post create\-account(@http:Payload json accountDetails) returns json|error {
+    resource function post create\-account(@http:Payload json accountDetails) returns json|http:BadRequest {
         // Send a response back to the caller.
 
-        string accountName = check accountDetails.Data.Account.DisplayName;
-        string currency = check accountDetails.Data.Account.Currency;
-        string nickName = check accountDetails.Data.Account.Nickname;
-        string openingDate = check accountDetails.Data.Account.OpeningDate;
-        string maturityDate = check accountDetails.Data.Account.MaturityDate;
-        string accountType = check accountDetails.Data.Account.AccountType;
-        string accountSubType = check accountDetails.Data.Account.AccountSubType;
-        string accountNumber = uuid:createType4AsString();
-        json createdAccountDetails = {"AccountID": accountNumber, "Account Name": accountName, "Status": "Enabled", "StatusUpdateDateTime": time:utcToString(time:utcNow()), "Currency": currency, "AccountType": accountType, "AccountSubType": accountSubType, "Nickname": nickName, "OpeningDate": openingDate, "MaturityDate": maturityDate, "Balance": 0};
-        allAccounts.add({accountId: accountNumber, accountName: accountName, status: "Enabled", statusUpdateDateTime: time:utcToString(time:utcNow()), currency: currency, nickName: nickName, openingDate: openingDate, maturityDate: maturityDate, accountType: accountType, accountSubType: accountSubType, balance: 0});
-        json returnvalue = {
-            "Data": {
-                "Account": [createdAccountDetails],
-                "Meta": {
-                },
-                "Risk": {
-                },
-                "Links": {
-                    "Self": ""
+        do {
+            // Send a response back to the caller.
+
+            string accountName = check accountDetails.Data.Account.DisplayName;
+            string currency = check accountDetails.Data.Account.Currency;
+            string nickName = check accountDetails.Data.Account.Nickname;
+            string openingDate = check accountDetails.Data.Account.OpeningDate;
+            string maturityDate = check accountDetails.Data.Account.MaturityDate;
+            string accountType = check accountDetails.Data.Account.AccountType;
+            string accountSubType = check accountDetails.Data.Account.AccountSubType;
+            string accountNumber = uuid:createType4AsString();
+            json createdAccountDetails = {"AccountID": accountNumber, "Account Name": accountName, "Status": "Enabled", "StatusUpdateDateTime": time:utcToString(time:utcNow()), "Currency": currency, "AccountType": accountType, "AccountSubType": accountSubType, "Nickname": nickName, "OpeningDate": openingDate, "MaturityDate": maturityDate, "Balance": 0};
+            allAccounts.add({accountId: accountNumber, accountName: accountName, status: "Enabled", statusUpdateDateTime: time:utcToString(time:utcNow()), currency: currency, nickName: nickName, openingDate: openingDate, maturityDate: maturityDate, accountType: accountType, accountSubType: accountSubType, balance: 0});
+            json returnvalue = {
+                "Data": {
+                    "Account": [createdAccountDetails],
+                    "Meta": {
+                    },
+                    "Risk": {
+                    },
+                    "Links": {
+                        "Self": ""
+                    }
                 }
-            }
-        };
-        return returnvalue;
+            };
+            return returnvalue;
+        } on fail var e {
+            string message = e.message();
+            log:printError(message);
+            return http:BAD_REQUEST;
+        }
+
     }
 
     # A resource for creating new payment records
     # + paymentDetails - the payment resource
     # + return - payment information
-    resource function post payments(@http:Payload json paymentDetails) returns json|error {
+    resource function post payments(@http:Payload json paymentDetails) returns json|http:BadRequest {
         // Send a response back to the caller.
-        string reference = check paymentDetails.Data.Initiation.Reference;
-        string creditDebitIndicator = check paymentDetails.Data.Initiation.CreditDebitIndicator;
-        string amountTemp = check paymentDetails.Data.Initiation.Amount.Amount;
-        string currency = check paymentDetails.Data.Initiation.Amount.Currency;
-        string bookingDateTime = time:utcToString(time:utcNow());
-        string valueDateTime = time:utcToString(time:utcNow());
-        float amount = check float:fromString(amountTemp);
-        string[] accountId_issuer = check self.setAccount(paymentDetails, amount);
-        string issuer = accountId_issuer[0];
-        string accountId = accountId_issuer[1];
-        transactionIndex += 1;
-        float accountBalance = check self.getAccountBal(accountId);
-        return self.setCredit(accountId, transactionIndex, reference, amount, creditDebitIndicator, bookingDateTime, valueDateTime, issuer, accountBalance, currency);
+        do {
+            // Send a response back to the caller.
+            string reference = check paymentDetails.Data.Initiation.Reference;
+            string creditDebitIndicator = check paymentDetails.Data.Initiation.CreditDebitIndicator;
+            string amountTemp = check paymentDetails.Data.Initiation.Amount.Amount;
+            string currency = check paymentDetails.Data.Initiation.Amount.Currency;
+            string bookingDateTime = time:utcToString(time:utcNow());
+            string valueDateTime = time:utcToString(time:utcNow());
+            float amount = check float:fromString(amountTemp);
+            string[] accountId_issuer = check self.setAccount(paymentDetails, amount);
+            string issuer = accountId_issuer[0];
+            string accountId = accountId_issuer[1];
+            transactionIndex += 1;
+            float accountBalance = check self.getAccountBal(accountId);
+            return self.setCredit(accountId, transactionIndex, reference, amount, creditDebitIndicator, bookingDateTime, valueDateTime, issuer, accountBalance, currency);
+        } on fail var e {
+            string message = e.message();
+            log:printError(message);
+            return http:BAD_REQUEST;
+        }
+
     }
 
     # A resource for returning transaction records
@@ -138,14 +156,14 @@ service / on new http:Listener(9090) {
         string accountId = "";
         if (creditDebitIndicator == "Credit")
         {
-            issuer = check details.Data.Initiation.CreditorAccount.SchemeName;
-            accountId = check details.Data.Initiation.DebtorAccount.Identification;
+            issuer = check details.Data.Initiation.DebtorAccount.SchemeName;
+            accountId = check details.Data.Initiation.CreditorAccount.Identification;
             self.changeAccountBalance(amount, accountId, "Credit");
 
         }
         else {
-            issuer = check details.Data.Initiation.DebtorAccount.SchemeName;
-            accountId = check details.Data.Initiation.CreditorAccount.Identification;
+            issuer = check details.Data.Initiation.CreditorAccount.SchemeName;
+            accountId = check details.Data.Initiation.DebtorAccount.Identification;
             self.changeAccountBalance(amount, accountId, "Credit");
 
         }
@@ -197,12 +215,13 @@ service / on new http:Listener(9090) {
                 "StatusUpdateDateTime": bookingDateTime,
                 "CreationDateTime": valueDateTime,
                 "Initiation": {
-                    "Issuer": issuer,
-                    "Identification": accountId
+                    "Issuer": issuer
                 },
                 "Reference": transactionReference,
-                "CurrencyOfTransfer": currency
-
+                "Amount": {
+                    "Amount": amount,
+                    "Currency": currency
+                }
             },
             "Meta": {
 

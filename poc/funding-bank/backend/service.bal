@@ -24,10 +24,10 @@ service / on new http:Listener(9090) {
     # A resource for retuning the list of accounts in the funding bank
 
     # + return - list of banks
-    resource function get acounts() returns json[]{
+    resource function get accounts() returns json[]{
         // Send a response back to the caller.
-        json[] listOfBanks = <json[]>t.toJson();
-        return listOfBanks;
+        json[] listOfAccounts = <json[]>t.toJson();
+        return listOfAccounts;
     }
      resource function get transactions() returns json{
         // Send a response back to the caller.
