@@ -48,6 +48,9 @@ type AmountRec record {|
 # bound to port `9090`.
 service / on new http:Listener(9090) {
 
+    # A resource for creating a new account
+    # + accountDetails - json containing the new account details
+    # + return - newly created account information.
     resource function post create\-account(@http:Payload json accountDetails) returns json|error {
         // Send a response back to the caller.
 
@@ -76,6 +79,9 @@ service / on new http:Listener(9090) {
         return returnvalue;
     }
 
+    # A resource for creating new payment records
+    # + paymentDetails - the payment resource
+    # + return - payment information
     resource function post payments(@http:Payload json paymentDetails) returns json|error {
         // Send a response back to the caller.
         string reference = check paymentDetails.Data.Initiation.Reference;
@@ -93,6 +99,9 @@ service / on new http:Listener(9090) {
         return self.setCredit(accountId, transactionIndex, reference, amount, creditDebitIndicator, bookingDateTime, valueDateTime, issuer, accountBalance, currency);
     }
 
+    # A resource for returning transaction records
+    # + return - transaction history
+    #
     resource function get transactions() returns json {
         // Send a response back to the caller.
         json[] transactionsHistory = <json[]>allTransactions.toJson();
@@ -104,12 +113,17 @@ service / on new http:Listener(9090) {
 
     }
 
+    # A resource for returning the list of funding banks 
+    # + return - The list of funding banks information
     resource function get registered\-funding\-banks() returns json|error {
         // Send a response back to the caller.
         json listOfBanks = {"ListofBanks": ["ABC", "Bank GSA", "ERGO Bank", "MIS Bank", "LP Bank", "Co Bank"]};
         return listOfBanks;
     }
 
+    # A resource for returning the list of accounts
+    # + return - The list of accounts
+    #
     resource function get accounts() returns json|error {
         // Send a response back to the caller.
         json[] listOfAccounts = <json[]>allAccounts.toJson();
