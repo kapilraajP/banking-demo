@@ -233,6 +233,7 @@ service / on new http:Listener(9090) {
         return transactionSummary;
 
     }
+  # A resource for deleting records
 
     resource function delete records() {
         allTransactions.removeAll();
