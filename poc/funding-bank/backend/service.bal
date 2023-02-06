@@ -51,7 +51,12 @@ service / on new http:Listener(9090) {
     }
      resource function get transactions() returns json{
         // Send a response back to the caller.
-        return {};
+        json[] transactionsHistory = <json[]>allTransactions.toJson();
+        return {
+            "Data": {
+                "Transaction": [transactionsHistory]
+            }
+        };
     }
 
      resource function post payments(@http:Payload json paymentDetails) returns json|http:BadRequest{
