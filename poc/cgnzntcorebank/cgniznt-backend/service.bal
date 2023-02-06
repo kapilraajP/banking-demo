@@ -234,10 +234,9 @@ service / on new http:Listener(9090) {
 
     }
 
-    resource function delete records() returns json {
+    resource function delete records() {
         allTransactions.removeAll();
         allAccounts.removeAll();
-        return {"Message": "All data were reset"};
 
     }
 }
