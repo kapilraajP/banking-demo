@@ -167,4 +167,14 @@ service / on new http:Listener(9090) {
         return transactionSummary;
 
     }
+    
+        resource function delete records () {
+        allTransactions.removeAll();
+        allAccounts.removeAll();
+        allAccounts.add({ name: "My Savings Account", balance: 24000.0, accountId: "10001234" });
+        allAccounts.add( { name: "College Fund Account", balance: 8572.0, accountId: "10005678"});
+        allAccounts.add({ name: "Vacation Account", balance: 7234.0, accountId: "10002222"});
+    
+
+}
 }
