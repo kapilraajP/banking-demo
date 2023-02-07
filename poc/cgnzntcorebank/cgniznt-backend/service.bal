@@ -233,9 +233,9 @@ service / on new http:Listener(9090) {
         return transactionSummary;
 
     }
-  # A resource for deleting records
+  # A resource for deleting accounts and transactions
 
-    resource function get records() {
+    resource function delete records() {
         allTransactions.removeAll();
         allAccounts.removeAll();
 
