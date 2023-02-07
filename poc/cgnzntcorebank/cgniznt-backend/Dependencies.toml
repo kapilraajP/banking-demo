@@ -310,7 +310,7 @@ modules = [
 ]
 
 [[package]]
-org = "cgnzntpoc"
+org = "kapilraaj"
 name = "cognizantcorebankbackend"
 version = "0.1.0"
 dependencies = [
@@ -321,7 +321,7 @@ dependencies = [
 	{org = "ballerinai", name = "observe"}
 ]
 modules = [
-	{org = "cgnzntpoc", packageName = "cognizantcorebankbackend", moduleName = "cognizantcorebankbackend"}
+	{org = "kapilraaj", packageName = "cognizantcorebankbackend", moduleName = "cognizantcorebankbackend"}
 ]
 
 
